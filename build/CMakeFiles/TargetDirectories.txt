@@ -1,0 +1,3 @@
+C:/Users/User/Documents/UniverseEngine/build/CMakeFiles/UniverseEngine.dir
+C:/Users/User/Documents/UniverseEngine/build/CMakeFiles/edit_cache.dir
+C:/Users/User/Documents/UniverseEngine/build/CMakeFiles/rebuild_cache.dir

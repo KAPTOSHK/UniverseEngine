@@ -1,0 +1,8 @@
+[
+{
+  "directory": "C:/Users/User/Documents/UniverseEngine/build",
+  "command": "C:\\Dev-Cpp\\TDM-GCC-64\\bin\\g++.exe   -g -std=gnu++14 -o CMakeFiles\\UniverseEngine.dir\\main.cpp.obj -c C:\\Users\\User\\Documents\\UniverseEngine\\main.cpp",
+  "file": "C:/Users/User/Documents/UniverseEngine/main.cpp",
+  "output": "CMakeFiles/UniverseEngine.dir/main.cpp.obj"
+}
+]

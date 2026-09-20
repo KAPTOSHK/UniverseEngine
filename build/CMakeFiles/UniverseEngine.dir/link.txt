@@ -1,0 +1,3 @@
+"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\UniverseEngine.dir/objects.a
+C:\Dev-Cpp\TDM-GCC-64\bin\ar.exe qc CMakeFiles\UniverseEngine.dir/objects.a @CMakeFiles\UniverseEngine.dir\objects1.rsp
+C:\Dev-Cpp\TDM-GCC-64\bin\g++.exe -g -mwindows -Wl,--whole-archive CMakeFiles\UniverseEngine.dir/objects.a -Wl,--no-whole-archive -o UniverseEngine.exe -Wl,--out-implib,libUniverseEngine.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\UniverseEngine.dir\linkLibs.rsp

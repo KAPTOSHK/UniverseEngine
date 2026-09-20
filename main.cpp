@@ -296,7 +296,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	bool done = false;
 	
 	if(MessageBox(NULL, "Do You Want To Launch Application In Fullscreen Mode?", "Launch In Fullscreen Mode?", MB_YESNO | MB_ICONQUESTION) == IDNO) fullscreen = false;
-	if(!CreateGLWindow("Blue Snake Engine", 1024, 768, 32, fullscreen)) return 0;
+	if(!CreateGLWindow("Universe Engine", 1024, 768, 32, fullscreen)) return 0;
 	
 	while(!done) {
 		if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
@@ -319,7 +319,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				keys[VK_F1] = false;
 				KillGLWindow();
 				fullscreen = !fullscreen;
-				if(!CreateGLWindow("Blue Snake Engine", 1024, 768, 32, fullscreen)) return 0;
+				if(!CreateGLWindow("Universe Engine", 1024, 768, 32, fullscreen)) return 0;
 			}
 		}
 	}
