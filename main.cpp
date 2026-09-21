@@ -1,4 +1,5 @@
 #include <windows.h>  //Библиотека винды
+#include <stdio.h>    //Ввод/вывод
 #include <gl\gl.h>    //Основная библиотека OpenGL
 #include <gl\glu.h>   //Глю тоже нужен
 #include <tchar.h>    //Для надписей
@@ -8,23 +9,36 @@
 HGLRC hRC = NULL;    //Контекст рендеринга
 HDC hDC = NULL;      //Приватный контекст устройства GDI
 HWND hWnd = NULL;    //Дискриптор окна
-HINSTANCE hInstance; //Ну и наконец дескриптор ппредложения
+HINSTANCE hInstance; //Ну и наконец дискриптор предложения
 
-bool keys[256];         //Массив булевых значений клавиш клавиат
+bool keys[256];         //Массив булевых значений клавиш клавиатуры
 bool active = true;     //Активно ли наше окно
 bool fullscreen = true; //Переменная фуллскрина
 
-GLfloat xrot;
-GLfloat yrot;
-GLfloat zrot;
+bool light; //Свет ВКЛ/ВЫКЛ
+bool lp;    //L нажата?
+bool fp;    //F нажата?
 
-GLuint texture[1];
+GLfloat xrot;   //X вращение
+GLfloat yrot;   //Y вращение
+GLfloat xspeed; //X скорость вращения
+GLfloat yspeed; //Y скорость вращения
+
+GLfloat z =- 5.0f; //Сдвиг вглубь экрана
+
+GLuint filter;     //Фильтр
+GLuint texture[3]; //Кол-во текстур
+
+GLfloat LightAmbient[] = {0.5f, 0.5f, 0.5f, 1.0f};  //Значение фонового света
+GLfloat LightDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};  //Значения диффузного света
+GLfloat LightPosition[] = {0.0f, 0.0f, 2.0f, 1.0f}; //Позиция света
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM); //Прототип функции WndProc
 
 // Загрузка картинки и конвертирование в текстуру
-GLvoid LoadGLTextures() {
-    int width, height, nrChannels;
+int LoadGLTextures() {
+	int Status = false;
+    int width = 0, height = 0, nrChannels = 0;
     
     // Переворачиваем текстуру по оси Y, так как у OpenGL и PNG разные начала координат
     stbi_set_flip_vertically_on_load(true); 
@@ -32,19 +46,32 @@ GLvoid LoadGLTextures() {
     // Загружаем картинку с помощью stb_image (принудительно запрашиваем 3 канала - RGB)
     unsigned char* data = stbi_load("Texture.png", &width, &height, &nrChannels, STBI_rgb);
 
-	glEnable(GL_TEXTURE_2D);
-    // Создание текстуры
-    glGenTextures(1, &texture[0]);
-    glBindTexture(GL_TEXTURE_2D, texture[0]);
+	Status = true;
 
+	glEnable(GL_TEXTURE_2D);
+    glGenTextures(3, &texture[0]);
+
+	//Фильтрация по соседним пикселям
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+	//Линейная фильтрация
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-    // Передаем данные в OpenGL. Вместо устаревшей "3" используем константу GL_RGB
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    
-    // Обязательно освобождаем память, которую выделила stb_image
+
+	//Текстура с мип-наложением
+    glBindTexture(GL_TEXTURE_2D, texture[2]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+
+	// Замените старый gluBuild2DMipmaps на этот:
+	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
     stbi_image_free(data);
+	return Status;
 }
 
 //Функция для изменения размеров окна
@@ -59,11 +86,11 @@ GLvoid ResizeGLScene(GLsizei width, GLsizei height) {
 }
 
 bool InitGL(GLsizei Width, GLsizei Height) {
-	LoadGLTextures();           //Загрузка текстур
+	if(!LoadGLTextures()) return false;
 	glEnable(GL_TEXTURE_2D);    //Разрешение наложение текстуры
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
 	glClearDepth(1.0);
-	glDepthFunc(GL_LESS);
+	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
 	glShadeModel(GL_SMOOTH);
 
@@ -72,66 +99,73 @@ bool InitGL(GLsizei Width, GLsizei Height) {
 
 	gluPerspective(45.0f, (GLfloat)Width / (GLfloat)Height, 0.1f, 100.0f);
 
+	glLightfv(GL_LIGHT1, GL_AMBIENT, LightAmbient);  //Установка фонового света
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, LightAmbient);  //Установка диффузного света
+
 	glMatrixMode(GL_MODELVIEW);
 	return true;
 }
 
-//Функция отрисовки сцены
+//Функция отрисовки сценыы
 bool DrawGLScene(GLvoid) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Вычищаем буферы глубины и цвета
 		
 	glLoadIdentity();
-	glTranslatef(1.5f, 0.0f, -6.0);
+	glTranslatef(0.0f, 0.0f, z);
 	glPushMatrix();
 
-	glRotatef(xrot, 1.0f, 0.0f, 0.0f);
-	glRotatef(yrot, 0.0f, 1.0f, 0.0f);
-	glRotatef(zrot, 0.0f, 0.0f, 1.0f);
+	glRotatef(xrot, 1.0f, 0.0f, 0.0f); //Вращение по X
+	glRotatef(yrot, 0.0f, 1.0f, 0.0f); //Вращение по Y
 
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	glBindTexture(GL_TEXTURE_2D, texture[filter]);
 
 	glBegin(GL_QUADS);
 		//Передняя грань
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	//Низ лево
-		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	//Низ право
-		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	//Верх право
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	//Верх лево
+		glNormal3f( 0.0f, 0.0f, 1.0f); //Нормаль указывает на наблюдателя
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f); //Точка 1 (Перед)
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f); //Точка 2 (Перед)
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f); //Точка 3 (Перед)
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f); //Точка 4 (Перед)
 
 		//Задняя грань
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	//Низ право
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	//Верх право
-		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	//Верх лево
-		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	//Низ лево
+		glNormal3f( 0.0f, 0.0f,-1.0f); //Нормаль указывает от наблюдателя
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f); //Точка 1 (Зад)
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f); //Точка 2 (Зад)
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f); //Точка 3 (Зад)
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f); //Точка 4 (Зад)
 
 		//Верхняя грань
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	//Верх лево
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	//Низ лево
-		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	//Низ право
-		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	//Верх право
+		glNormal3f( 0.0f, 1.0f, 0.0f); //Нормаль указывает вверх
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f); //Точка 1 (Верх)
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f); //Точка 2 (Верх)
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f); //Точка 3 (Верх)
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f); //Точка 4 (Верх)
 
 		//Нижняя грань
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	//Верх право
-		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	//Верх лево
-		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	//Низ лево
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	//Низ право
+		glNormal3f( 0.0f,-1.0f, 0.0f); //Нормаль указывает вниз
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f); //Точка 1 (Низ)
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f); //Точка 2 (Низ)
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f); //Точка 3 (Низ)
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f); //Точка 4 (Низ)
 
 		//Правая грань
-		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	//Низ право
-		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	//Верх право
-		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	//Верх лево
-		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	//Низ лево
+		glNormal3f( 1.0f, 0.0f, 0.0f); //Нормаль указывает вправо
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f); //Точка 1 (Право)
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f); //Точка 2 (Право)
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f); //Точка 3 (Право)
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f); //Точка 4 (Право)
 
 		//Левая грань
-		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	//Низ лево
-		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	//Низ право
-		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	//Верх право
-		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	//Верх лево
+		glNormal3f(-1.0f, 0.0f, 0.0f); // Нормаль указывает влево
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f); //Точка 1 (Лево)
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f); //Точка 2 (Лево)
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f); //Точка 3 (Лево)
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f); //Точка 4 (Лево)
 	glEnd();
 	glPopMatrix();
 
-	xrot += 0.3f; //Ось вращения X
-	yrot += 0.2f; //Ось вращения Y
-	zrot += 0.4f; //Ось вращения Z
+	xrot += xspeed; //Ось вращения X
+	yrot += yspeed; //Ось вращения Y
 
 	return true; //Успех
 }
@@ -351,9 +385,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				else {
 					DrawGLScene();
 					SwapBuffers(hDC);
+
+					if (keys['L'] && !lp) {
+						lp = true;
+						light = !true;
+						if(!light) glDisable(GL_LIGHTING);
+						else glEnable(GL_LIGHTING);
+					}
+					if(!keys['L']) lp = false;
+
+					if(keys['F'] && !fp) {
+						fp = true;
+						filter += 1;
+						if (filter>2) filter = 0;
+					}
+					if(!keys['F']) fp = false;
+
+					if(keys[VK_PRIOR]) z -= 0.02f;
+					if(keys[VK_NEXT]) z += 0.02f;
+
+					if(keys[VK_UP]) xspeed -= 0.01f;
+					if(keys[VK_DOWN]) xspeed += 0.01f;
+					if(keys[VK_RIGHT]) yspeed += 0.01f;
+					if(keys[VK_LEFT]) yspeed -= 0.01f;
 				}
 			}
-			
 			if(keys[VK_F1]) {
 				keys[VK_F1] = false;
 				KillGLWindow();

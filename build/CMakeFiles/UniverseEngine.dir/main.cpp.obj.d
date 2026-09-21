@@ -235,6 +235,10 @@ CMakeFiles/UniverseEngine.dir/main.cpp.obj: \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/winsvc.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/mcx.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/imm.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/stdio.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/_mingw_off_t.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/swprintf.inl \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/sec_api/stdio_s.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/gl/gl.h \
  C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/stddef.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/stddef.h \
@@ -243,10 +247,6 @@ CMakeFiles/UniverseEngine.dir/main.cpp.obj: \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/tchar.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/sec_api/tchar_s.h \
  C:\Users\User\Documents\UniverseEngine\stb_image.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/stdio.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/_mingw_off_t.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/swprintf.inl \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/sec_api/stdio_s.h \
  C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/math.h \
  C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/cmath \
  C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/bits/cpp_type_traits.h \
