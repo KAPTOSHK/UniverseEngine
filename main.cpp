@@ -15,9 +15,11 @@ bool keys[256];         //Массив булевых значений клав�
 bool active = true;     //Активно ли наше окно
 bool fullscreen = true; //Переменная фуллскрина
 
+bool blend; //Смешивание ВКЛ/ВЫКЛ
 bool light; //Свет ВКЛ/ВЫКЛ
 bool lp;    //L нажата?
 bool fp;    //F нажата?
+bool bp;    //B нажата?
 
 GLfloat xrot;   //X вращение
 GLfloat yrot;   //Y вращение
@@ -87,12 +89,16 @@ GLvoid ResizeGLScene(GLsizei width, GLsizei height) {
 
 bool InitGL(GLsizei Width, GLsizei Height) {
 	if(!LoadGLTextures()) return false;
+	glEnable(GL_LIGHTING);
 	glEnable(GL_TEXTURE_2D);    //Разрешение наложение текстуры
 	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
 	glClearDepth(1.0);
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_DEPTH_TEST);
 	glShadeModel(GL_SMOOTH);
+
+	glColor4f(1.0f, 1.0f, 1.0f, 0.5f);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -388,7 +394,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 					if (keys['L'] && !lp) {
 						lp = true;
-						light = !true;
+						light = !light;
 						if(!light) glDisable(GL_LIGHTING);
 						else glEnable(GL_LIGHTING);
 					}
@@ -408,6 +414,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					if(keys[VK_DOWN]) xspeed += 0.01f;
 					if(keys[VK_RIGHT]) yspeed += 0.01f;
 					if(keys[VK_LEFT]) yspeed -= 0.01f;
+
+					if(keys['B'] && !bp) {
+						bp = true;
+						blend = !blend;
+						if (blend) {
+							glEnable(GL_BLEND);
+							glDisable(GL_DEPTH_TEST);
+						}
+						else {
+							glDisable(GL_BLEND);
+							glEnable(GL_DEPTH_TEST);
+						}
+					}
+					if(!keys['B']) bp = false;
 				}
 			}
 			if(keys[VK_F1]) {
