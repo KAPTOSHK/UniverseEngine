@@ -1,7 +1,9 @@
-#include <windows.h> //Библиотека винды
-#include <gl\gl.h>   //Основная библиотека OpenGL
-#include <gl\glu.h>  //Глю тоже нужен
-#include <tchar.h>   //Для надписей
+#include <windows.h>  //Библиотека винды
+#include <gl\gl.h>    //Основная библиотека OpenGL
+#include <gl\glu.h>   //Глю тоже нужен
+#include <tchar.h>    //Для надписей
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 HGLRC hRC = NULL;    //Контекст рендеринга
 HDC hDC = NULL;      //Приватный контекст устройства GDI
@@ -12,10 +14,38 @@ bool keys[256];         //Массив булевых значений клав�
 bool active = true;     //Активно ли наше окно
 bool fullscreen = true; //Переменная фуллскрина
 
-GLfloat rtri;
-GLfloat rquad;
+GLfloat xrot;
+GLfloat yrot;
+GLfloat zrot;
+
+GLuint texture[1];
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM); //Прототип функции WndProc
+
+// Загрузка картинки и конвертирование в текстуру
+GLvoid LoadGLTextures() {
+    int width, height, nrChannels;
+    
+    // Переворачиваем текстуру по оси Y, так как у OpenGL и PNG разные начала координат
+    stbi_set_flip_vertically_on_load(true); 
+
+    // Загружаем картинку с помощью stb_image (принудительно запрашиваем 3 канала - RGB)
+    unsigned char* data = stbi_load("Texture.png", &width, &height, &nrChannels, STBI_rgb);
+
+	glEnable(GL_TEXTURE_2D);
+    // Создание текстуры
+    glGenTextures(1, &texture[0]);
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    // Передаем данные в OpenGL. Вместо устаревшей "3" используем константу GL_RGB
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    
+    // Обязательно освобождаем память, которую выделила stb_image
+    stbi_image_free(data);
+}
 
 //Функция для изменения размеров окна
 GLvoid ResizeGLScene(GLsizei width, GLsizei height) {
@@ -28,102 +58,81 @@ GLvoid ResizeGLScene(GLsizei width, GLsizei height) {
 	glLoadIdentity(); //Сброс матрицы вида моделей
 }
 
-//Функция инициализации OpenGL
-bool InitGL(GLvoid) {
-	glShadeModel(GL_SMOOTH); //Модель шейдера
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //Цвет
-	glClearDepth(1.0f); //Глубина
-	glEnable(GL_DEPTH_TEST); //Разрешить тест глубины
-	glDepthFunc(GL_LEQUAL); //Тип теста глубины
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); //Улучшение вычисления перспективы
-	return true; //Успех
+bool InitGL(GLsizei Width, GLsizei Height) {
+	LoadGLTextures();           //Загрузка текстур
+	glEnable(GL_TEXTURE_2D);    //Разрешение наложение текстуры
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearDepth(1.0);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_DEPTH_TEST);
+	glShadeModel(GL_SMOOTH);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	gluPerspective(45.0f, (GLfloat)Width / (GLfloat)Height, 0.1f, 100.0f);
+
+	glMatrixMode(GL_MODELVIEW);
+	return true;
 }
 
 //Функция отрисовки сцены
 bool DrawGLScene(GLvoid) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Вычищаем буферы глубины и цвета
-	glLoadIdentity(); //Сбрасываем текущую матрицу
-	
-	glTranslatef(-1.5f, 0.0f, -6.0);
-	glPushMatrix();
-	glRotatef(rtri, 0.0f, 1.0f, 0.0f);
-	glBegin(GL_TRIANGLES);
-		glColor3f ( 1.0f,  0.0f,  0.0f);
-		glVertex3f( 0.0f,  1.0f,  0.0f);
-		glColor3f ( 0.0f,  1.0f,  0.0f);
-		glVertex3f(-1.0f, -1.0f,  1.0f);
-		glColor3f ( 0.0f,  0.0f,  1.0f);
-		glVertex3f( 1.0f, -1.0f,  1.0f);
-		
-		glColor3f ( 1.0f,  0.0f,  0.0f);
-		glVertex3f( 0.0f,  1.0f,  0.0f);
-		glColor3f ( 0.0f,  0.0f,  1.0f);
-		glVertex3f( 1.0f, -1.0f,  1.0f);
-		glColor3f ( 0.0f,  1.0f,  0.0f);
-		glVertex3f( 1.0f, -1.0f, -1.0f);
-		
-		glColor3f ( 1.0f,  0.0f,  0.0f);
-		glVertex3f( 0.0f,  1.0f,  0.0f);
-		glColor3f ( 0.0f,  1.0f,  0.0f);
-		glVertex3f( 1.0f, -1.0f, -1.0f);
-		glColor3f ( 0.0f,  0.0f,  1.0f);
-		glVertex3f(-1.0f, -1.0f, -1.0f);
-		
-		glColor3f ( 1.0f,  0.0f,  0.0f);
-		glVertex3f( 0.0f,  1.0f,  0.0f);
-		glColor3f ( 0.0f,  0.0f,  1.0f);
-		glVertex3f(-1.0f, -1.0f, -1.0f);
-		glColor3f ( 0.0f,  1.0f,  0.0f);
-		glVertex3f(-1.0f, -1.0f,  1.0f);
-		
-	glEnd();
-	glPopMatrix();
 		
 	glLoadIdentity();
 	glTranslatef(1.5f, 0.0f, -6.0);
 	glPushMatrix();
-	glRotatef(rquad, 0.0f, 1.0f, 0.0f);
+
+	glRotatef(xrot, 1.0f, 0.0f, 0.0f);
+	glRotatef(yrot, 0.0f, 1.0f, 0.0f);
+	glRotatef(zrot, 0.0f, 0.0f, 1.0f);
+
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
+
 	glBegin(GL_QUADS);
-		glColor3f(0.0f, 1.0f, 0.0f);
-		glVertex3f( 1.0f,  1.0f, -1.0f);
-		glVertex3f(-1.0f,  1.0f, -1.0f);
-		glVertex3f(-1.0f,  1.0f,  1.0f);
-		glVertex3f( 1.0f,  1.0f,  1.0f);
+		//Передняя грань
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	//Низ лево
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	//Низ право
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	//Верх право
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	//Верх лево
 
-		glColor3f(1.0f, 0.5f, 0.0f);
-		glVertex3f( 1.0f, -1.0f,  1.0f);
-		glVertex3f(-1.0f, -1.0f,  1.0f);
-		glVertex3f(-1.0f, -1.0f,  1.0f);
-		glVertex3f( 1.0f, -1.0f,  1.0f);
+		//Задняя грань
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	//Низ право
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	//Верх право
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	//Верх лево
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	//Низ лево
 
-		glColor3f(1.0f, 0.0f, 0.0f);
-		glVertex3f( 1.0f,  1.0f,  1.0f);
-		glVertex3f(-1.0f,  1.0f,  1.0f);
-		glVertex3f(-1.0f, -1.0f,  1.0f);
-		glVertex3f( 1.0f, -1.0f,  1.0f);
+		//Верхняя грань
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	//Верх лево
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	//Низ лево
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	//Низ право
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	//Верх право
 
-		glColor3f(1.0f, 1.0f, 0.0f);
-		glVertex3f( 1.0f, -1.0f, -1.0f);
-		glVertex3f(-1.0f, -1.0f, -1.0f);
-		glVertex3f(-1.0f,  1.0f, -1.0f);
-		glVertex3f( 1.0f,  1.0f, -1.0f);
+		//Нижняя грань
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	//Верх право
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	//Верх лево
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	//Низ лево
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	//Низ право
 
-		glColor3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(-1.0f,  1.0f,  1.0f);
-		glVertex3f(-1.0f,  1.0f, -1.0f);
-		glVertex3f(-1.0f, -1.0f, -1.0f);
-		glVertex3f(-1.0f, -1.0f,  1.0f);
+		//Правая грань
+		glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);	//Низ право
+		glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);	//Верх право
+		glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f);	//Верх лево
+		glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);	//Низ лево
 
-		glColor3f(1.0, 0.0f, 1.0f);
-		glVertex3f( 1.0f,  1.0f, -1.0f);
-		glVertex3f( 1.0f,  1.0f,  1.0f);
-		glVertex3f( 1.0f, -1.0f,  1.0f);
-		glVertex3f( 1.0f, -1.0f, -1.0f);
+		//Левая грань
+		glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);	//Низ лево
+		glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);	//Низ право
+		glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);	//Верх право
+		glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	//Верх лево
 	glEnd();
 	glPopMatrix();
-	
-	rtri += 0.2f;
-	rquad -= 0.5f;
+
+	xrot += 0.3f; //Ось вращения X
+	yrot += 0.2f; //Ось вращения Y
+	zrot += 0.4f; //Ось вращения Z
+
 	return true; //Успех
 }
 
@@ -154,7 +163,7 @@ GLvoid KillGLWindow(GLvoid) {
 	}
 	//Возможно ли разрегистрировать класс?
 	if(!UnregisterClass("OpenGL", hInstance)) {
-		MessageBox(NULL, "Couuld Not Unregidter Class.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
+		MessageBox(NULL, "Could Not Unregidter Class.", "SHUTDOWN ERROR", MB_OK | MB_ICONINFORMATION);
 		hInstance = NULL;
 	}
 }
@@ -287,7 +296,7 @@ bool CreateGLWindow(LPCTSTR title, int width, int height, int bits, bool fullscr
   	SetFocus(hWnd);
   	ResizeGLScene(width, height);
   	
-  	if(!InitGL()) {
+  	if(!InitGL(width, height)) {
   		KillGLWindow();
   		MessageBox(NULL, _T("Initialization Failed."), _T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
   		return false;

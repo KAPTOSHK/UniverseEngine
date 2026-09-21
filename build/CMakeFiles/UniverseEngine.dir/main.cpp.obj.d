@@ -241,4 +241,17 @@ CMakeFiles/UniverseEngine.dir/main.cpp.obj: \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/gl/glu.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/GL/gl.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/tchar.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/sec_api/tchar_s.h
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/sec_api/tchar_s.h \
+ C:\Users\User\Documents\UniverseEngine\stb_image.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/stdio.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/_mingw_off_t.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/swprintf.inl \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/sec_api/stdio_s.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/math.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/cmath \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/bits/cpp_type_traits.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/ext/type_traits.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/math.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/assert.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/stdint.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/stdint.h
