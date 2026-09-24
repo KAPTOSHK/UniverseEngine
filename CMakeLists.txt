@@ -9,7 +9,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXECUTABLE_SUFFIX ".exe")
 
 # Собираем исполняемый файл из main.cpp
-add_executable(UniverseEngine WIN32 main.cpp)
+add_executable(UniverseEngine WIN32 
+    main.cpp
+    InitGame.cpp
+    Config.cpp
+)
 
 # Линкуем библиотеки Windows / OpenGL
 target_link_libraries(UniverseEngine

@@ -128,6 +128,54 @@ UniverseEngine/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\UniverseEngine.dir\build.make CMakeFiles/UniverseEngine.dir/build
 .PHONY : UniverseEngine/fast
 
+Config.obj: Config.cpp.obj
+.PHONY : Config.obj
+
+# target to build an object file
+Config.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\UniverseEngine.dir\build.make CMakeFiles/UniverseEngine.dir/Config.cpp.obj
+.PHONY : Config.cpp.obj
+
+Config.i: Config.cpp.i
+.PHONY : Config.i
+
+# target to preprocess a source file
+Config.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\UniverseEngine.dir\build.make CMakeFiles/UniverseEngine.dir/Config.cpp.i
+.PHONY : Config.cpp.i
+
+Config.s: Config.cpp.s
+.PHONY : Config.s
+
+# target to generate assembly for a file
+Config.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\UniverseEngine.dir\build.make CMakeFiles/UniverseEngine.dir/Config.cpp.s
+.PHONY : Config.cpp.s
+
+InitGame.obj: InitGame.cpp.obj
+.PHONY : InitGame.obj
+
+# target to build an object file
+InitGame.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\UniverseEngine.dir\build.make CMakeFiles/UniverseEngine.dir/InitGame.cpp.obj
+.PHONY : InitGame.cpp.obj
+
+InitGame.i: InitGame.cpp.i
+.PHONY : InitGame.i
+
+# target to preprocess a source file
+InitGame.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\UniverseEngine.dir\build.make CMakeFiles/UniverseEngine.dir/InitGame.cpp.i
+.PHONY : InitGame.cpp.i
+
+InitGame.s: InitGame.cpp.s
+.PHONY : InitGame.s
+
+# target to generate assembly for a file
+InitGame.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\UniverseEngine.dir\build.make CMakeFiles/UniverseEngine.dir/InitGame.cpp.s
+.PHONY : InitGame.cpp.s
+
 main.obj: main.cpp.obj
 .PHONY : main.obj
 
@@ -161,6 +209,12 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... UniverseEngine
+	@echo ... Config.obj
+	@echo ... Config.i
+	@echo ... Config.s
+	@echo ... InitGame.obj
+	@echo ... InitGame.i
+	@echo ... InitGame.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

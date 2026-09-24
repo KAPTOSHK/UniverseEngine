@@ -8,6 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "C:/Users/User/Documents/UniverseEngine/Config.cpp" "CMakeFiles/UniverseEngine.dir/Config.cpp.obj" "gcc" "CMakeFiles/UniverseEngine.dir/Config.cpp.obj.d"
+  "C:/Users/User/Documents/UniverseEngine/InitGame.cpp" "CMakeFiles/UniverseEngine.dir/InitGame.cpp.obj" "gcc" "CMakeFiles/UniverseEngine.dir/InitGame.cpp.obj.d"
   "C:/Users/User/Documents/UniverseEngine/main.cpp" "CMakeFiles/UniverseEngine.dir/main.cpp.obj" "gcc" "CMakeFiles/UniverseEngine.dir/main.cpp.obj.d"
   )
 

@@ -1,53 +1,20 @@
-CMakeFiles/UniverseEngine.dir/main.cpp.obj: \
- C:\Users\User\Documents\UniverseEngine\main.cpp \
- C:\Users\User\Documents\UniverseEngine\stb_image.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/stdio.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/crtdefs.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/corecrt.h \
+CMakeFiles/UniverseEngine.dir/Configuration.cpp.obj: \
+ C:\Users\User\Documents\UniverseEngine\Configuration.cpp \
+ C:\Users\User\Documents\UniverseEngine\Configuration.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/windows.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/_mingw.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/_mingw_mac.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/_mingw_secapi.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/vadefs.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/sdks/_mingw_directx.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/sdks/_mingw_ddk.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/_mingw_off_t.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/swprintf.inl \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/sec_api/stdio_s.h \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/stdlib.h \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/cstdlib \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/x86_64-w64-mingw32/bits/c++config.h \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/x86_64-w64-mingw32/bits/os_defines.h \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/x86_64-w64-mingw32/bits/cpu_defines.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/stdlib.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/corecrt_wstdlib.h \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include-fixed/limits.h \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include-fixed/syslimits.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/limits.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/sec_api/stdlib_s.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/malloc.h \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/bits/std_abs.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/sdkddkver.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/excpt.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/crtdefs.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/corecrt.h \
  C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/stdarg.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/stdarg.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/_mingw_stdarg.h \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/stddef.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/stddef.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/string.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/sec_api/string_s.h \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/math.h \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/cmath \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/bits/cpp_type_traits.h \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/ext/type_traits.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/math.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/assert.h \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/stdint.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/stdint.h \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/emmintrin.h \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/xmmintrin.h \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/mmintrin.h \
- C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/mm_malloc.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/windows.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/sdkddkver.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/excpt.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/windef.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/minwindef.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/winapifamily.h \
@@ -61,9 +28,29 @@ CMakeFiles/UniverseEngine.dir/main.cpp.obj: \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/psdk_inc/intrin-impl.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/basetsd.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/guiddef.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/string.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/sec_api/string_s.h \
  C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/x86intrin.h \
  C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/ia32intrin.h \
  C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/immintrin.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/mmintrin.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/xmmintrin.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/mm_malloc.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/stdlib.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/cstdlib \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/x86_64-w64-mingw32/bits/c++config.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/x86_64-w64-mingw32/bits/os_defines.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/x86_64-w64-mingw32/bits/cpu_defines.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/stdlib.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/corecrt_wstdlib.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include-fixed/limits.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include-fixed/syslimits.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/limits.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/sec_api/stdlib_s.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/malloc.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/bits/std_abs.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/errno.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/emmintrin.h \
  C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/pmmintrin.h \
  C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/tmmintrin.h \
  C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/smmintrin.h \
@@ -250,9 +237,5 @@ CMakeFiles/UniverseEngine.dir/main.cpp.obj: \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/mcx.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/imm.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/gl/gl.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/gl/glu.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/GL/gl.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/tchar.h \
- C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/sec_api/tchar_s.h \
- C:\Users\User\Documents\UniverseEngine\InitGame.h \
- C:\Users\User\Documents\UniverseEngine\Config.h
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/stddef.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/stddef.h

@@ -1,4 +1,8 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/UniverseEngine.dir/Config.cpp.obj"
+  "CMakeFiles/UniverseEngine.dir/Config.cpp.obj.d"
+  "CMakeFiles/UniverseEngine.dir/InitGame.cpp.obj"
+  "CMakeFiles/UniverseEngine.dir/InitGame.cpp.obj.d"
   "CMakeFiles/UniverseEngine.dir/main.cpp.obj"
   "CMakeFiles/UniverseEngine.dir/main.cpp.obj.d"
   "UniverseEngine.exe"
