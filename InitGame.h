@@ -2,6 +2,8 @@
 #define INITGAME_H
 
 #include <GL\gl.h> //OpenGL
+void PerspectiveInfinite(float fovDeg, float aspect, float nearZ);
+GLuint LoadTexture(const char* filename);
 bool LoadTextures(); //Загрузка картинки и конвертирование в текстуру
 GLvoid ResizeWindow(GLsizei width, GLsizei height); //Функция для изменения размеров окна
 bool InitGL(GLsizei Width, GLsizei Height); //Инициализируем окно

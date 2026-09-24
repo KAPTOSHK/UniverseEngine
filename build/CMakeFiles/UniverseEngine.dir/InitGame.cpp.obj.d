@@ -237,6 +237,10 @@ CMakeFiles/UniverseEngine.dir/InitGame.cpp.obj: \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/winsvc.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/mcx.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/imm.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/cmath \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/bits/cpp_type_traits.h \
+ C:/Dev-Cpp/TDM-GCC-64/lib/gcc/x86_64-w64-mingw32/9.2.0/include/c++/ext/type_traits.h \
+ C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/math.h \
  C:\Users\User\Documents\UniverseEngine\InitGame.h \
  C:/Dev-Cpp/TDM-GCC-64/x86_64-w64-mingw32/include/GL/gl.h \
  C:\Users\User\Documents\UniverseEngine\stb_image.h \

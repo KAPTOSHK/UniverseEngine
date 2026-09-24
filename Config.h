@@ -14,23 +14,24 @@ extern bool active;     //Активно ли наше окно
 extern bool fullscreen; //Переменная фуллскрина
 extern bool blend;   //Смешивание ВКЛ/ВЫКЛ
 extern bool light;   //Свет ВКЛ/ВЫКЛ
+extern bool rmbDown;
+
 extern bool lp;      //L нажата?
 extern bool fp;      //F нажата?
 extern bool bp;      //B нажата?
 extern bool tp;      //T нажата?
 
+extern int winWidth, winHeight;
 extern int mouseDX, mouseDY;
+extern GLfloat aspect;
 
 extern GLfloat x, y, z;
-extern GLfloat xrot, yrot, zrot;
-
+extern GLfloat spin;
 extern GLfloat camX, camY, camZ; //Позиция камеры
 extern GLfloat camYaw, camPitch; //Поворот камеры (рыскание, наклон)
-extern int winWidth, winHeight;
-extern bool rmbDown;
 
 extern GLuint filter;     //Фильтр
-extern GLuint texture[3]; //Кол-во текстур
+extern GLuint texture[4]; //Кол-во текстур
 extern GLuint loop;       //Используется для циклов
 
 extern GLfloat LightAmbient[4];  //Значение фонового света

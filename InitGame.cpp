@@ -1,4 +1,5 @@
 #include <GL\glu.h>
+#include <cmath>
 #include <windows.h>
 #include "InitGame.h"
 #include "stb_image.h"
@@ -6,43 +7,61 @@
 
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM); //Прототип функции WndProc
 
-// Загрузка картинки и конвертирование в текстуру
-bool LoadTextures() {
-	int Status = false;
-    int width = 0, height = 0, nrChannels = 0;
-    
-    // Переворачиваем текстуру по оси Y, так как у OpenGL и PNG разные начала координат
-    stbi_set_flip_vertically_on_load(true); 
+void PerspectiveInfinite(float fovDeg, float aspect, float nearZ) {
+	if (aspect <= 0.0f) aspect = 1.0f;   // ← защита
+    if (nearZ <= 0.0f) nearZ = 0.1f;     // ← защита
+	
+    float fovRad = fovDeg * 3.14159265f / 180.0f;
+    float f = 1.0f / tanf(fovRad / 2.0f);
 
-    // Загружаем картинку с помощью stb_image (принудительно запрашиваем 3 канала - RGB)
-    unsigned char* data = stbi_load("Texture.png", &width, &height, &nrChannels, STBI_rgb);
+    float m[16] = {
+        f / aspect, 0,          0,   0,
+        0,          f,          0,   0,
+        0,          0,         -1,  -1,        // ← m[2][2] = -1, m[2][3] = -1
+        0,          0, -2.0f * nearZ, 0        // ← m[3][2] = -2*near, m[3][3] = 0
+    };
 
-	Status = true;
+    glMatrixMode(GL_PROJECTION);
+    glLoadMatrixf(m);
+    glMatrixMode(GL_MODELVIEW);
+}
 
-	glEnable(GL_TEXTURE_2D);
-    glGenTextures(3, &texture[0]);
+GLuint LoadTexture(const char* filename) {
+    int width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(true);
 
-	//Фильтрация по соседним пикселям----------------------------------------------------------------------------------------------------------------------------------------
-    glBindTexture(GL_TEXTURE_2D, texture[0]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    unsigned char* data = stbi_load(filename, &width, &height, &nrChannels, STBI_rgb);
+    if (!data) {
+        MessageBoxA(NULL, filename, "Texture load failed", MB_OK);
+        return 0;
+    }
 
-	//Линейная фильтрация----------------------------------------------------------------------------------------------------------------------------------------------------
-    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    GLuint id;
+    glGenTextures(1, &id);
+    glBindTexture(GL_TEXTURE_2D, id);
+
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 
-	//Текстура с мип-наложением----------------------------------------------------------------------------------------------------------------------------------------------
-    glBindTexture(GL_TEXTURE_2D, texture[2]);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-
-	// Замените старый gluBuild2DMipmaps на этот:
-	gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
     stbi_image_free(data);
-	return Status;
+    return id;
+}
+
+bool LoadTextures() {
+    glEnable(GL_TEXTURE_2D);
+
+    texture[0] = LoadTexture("Texture.png");
+    texture[1] = LoadTexture("Textures/Sun/Sun_2K.png");
+	texture[2] = LoadTexture("Textures/StarsMilkyWay/Stars_Milky_Way_2K.png");
+	texture[3] = LoadTexture("Textures/Mercury/Mercury_2K.png");
+
+    // если хоть одна не загрузилась — ошибка
+    for (int i = 0; i < 4; ++i) if (texture[i] == 0) return false;
+    return true;
 }
 
 //Функция для изменения размеров окна
@@ -51,7 +70,7 @@ GLvoid ResizeWindow(GLsizei width, GLsizei height) {
 	glViewport(0, 0, width, height); //Сброс текущей области вывода
 	glMatrixMode(GL_PROJECTION); //Выбор матрицы проекций
 	glLoadIdentity(); //Сброс матрицы проекций
-	gluPerspective(45.0f, (GLfloat)width/ (GLfloat)height, 0.1f, 100.0f); //Узнаем соотношения размеров окна
+	PerspectiveInfinite(45.0f, (GLfloat)width / (GLfloat)height, 0.1f); //Узнаем соотношения размеров окна
 	glMatrixMode(GL_MODELVIEW); //Выбор матрицы вида моделей
 	glLoadIdentity(); //Сброс матрицы вида моделей
 }
@@ -72,7 +91,7 @@ bool InitGL(GLsizei Width, GLsizei Height) {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	gluPerspective(45.0f, (GLfloat)Width / (GLfloat)Height, 0.1f, 100.0f);
+	PerspectiveInfinite(45.0f, (GLfloat)Width / (GLfloat)Height, 0.1f); //Узнаем соотношения размеров окна
 
 	glLightfv(GL_LIGHT1, GL_AMBIENT, LightAmbient);  //Установка фонового света
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, LightAmbient);  //Установка диффузного света
@@ -265,6 +284,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 		    delete[] buffer;
 		    return 0;
 		}
+
+		case WM_SIZE:
+    		if (hRC) {   // только если OpenGL уже инициализирован
+    		    ResizeWindow(LOWORD(lParam), HIWORD(lParam));
+    		}
+    		return 0;
 
 		case WM_RBUTTONDOWN:
 		    rmbDown = true;

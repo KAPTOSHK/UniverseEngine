@@ -9,66 +9,72 @@
 #include "InitGame.h"
 #include "Config.h"
 
+GLvoid DrawSphere(GLfloat radius, int rings, int sectors) {
+    const float PI = 3.14159265f;
+
+    for (int r = 0; r < rings; ++r) {
+        glBegin(GL_QUAD_STRIP);
+        for (int s = 0; s <= sectors; ++s) {
+            for (int k = 0; k < 2; ++k) {
+                float theta = PI * (float)(r + k) / (float)rings;
+                float phi   = 2.0f * PI * (float)s / (float)sectors;
+
+                float x = sinf(theta) * cosf(phi);
+                float y = cosf(theta);
+                float z = sinf(theta) * sinf(phi);
+
+                // Текстурные координаты
+                glTexCoord2f((float)s / sectors, 1.0f - (float)(r + k) / rings);
+
+                // Нормаль для освещения
+                glNormal3f(x, y, z);
+
+                // Вершина
+                glVertex3f(x * radius, y * radius, z * radius);
+            }
+        }
+        glEnd();
+    }
+}
+
 //Функция отрисовки сценыы
 GLvoid DrawScene() {
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
 
-	// ─── Камера ────────────────────────────────
+	//--------------------------Камера------------------------------------------------------------------------------------------------
     glRotatef(-camPitch, 1.0f, 0.0f, 0.0f);   //Наклон
     glRotatef(-camYaw,   0.0f, 1.0f, 0.0f);   //Поворот
     glTranslatef(-camX, -camY, -camZ);        //Сдвиг мира относительно камеры
+	//--------------------------------------------------------------------------------------------------------------------------------
 
+	//--------------------------------------------Скайбокс----------------------------------------------------------------------------
 	glPushMatrix();
-		glTranslatef(x, y, z);
-		glRotatef(xrot,1.0f,0.0f,0.0f);		// Вращение по оси X
-		glRotatef(yrot,0.0f,1.0f,0.0f);		// Вращение по оси Y
-		glRotatef(zrot,0.0f,0.0f,1.0f);		// Вращение по оси Z
-		glBindTexture(GL_TEXTURE_2D, texture[0]);
-	
-		glBegin(GL_QUADS);
-			//Передняя грань
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f); //Низ лево
-			glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f); //Низ право
-			glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f); //Верх право
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f); //Верх лево
-	
-			//Задняя грань
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f); //Низ право
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f); //Верх право
-			glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f); //Верх лево
-			glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f); //Низ лево
-	
-			//Верхняя грань
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f); //Верх лево
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f); //Низ лево
-			glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  1.0f,  1.0f); //Низ право
-			glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f); //Верх право
-	
-			//Нижняя грань
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f); //Верх право
-			glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f); //Верх лево
-			glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f); //Низ лево
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f); //Низ право
-	
-			//Правая грань
-			glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f); //Низ право
-			glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f); //Верх право
-			glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f,  1.0f); //Верх лево
-			glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f); //Низ лево
-	
-			//Левая грань
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f); //Низ лево
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f); //Низ право
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f); //Верх право
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f); //Верх лево
-		glEnd();
+		glTranslatef(0.0f, 0.0f, 0.0f); //Сдвиг
+    	glBindTexture(GL_TEXTURE_2D, texture[2]); //Скайбокс
+    	DrawSphere(100000000.0f, 40, 40); //Радиус, широта, долгота
 	glPopMatrix();
+	//--------------------------------------------------------------------------------------------------------------------------------
 
-	xrot += 0.3f;
-	yrot += 0.2f;
-	zrot += 0.4f;
+	//-----------------------------------------Солнце---------------------------------------------------------------------------------
+	glPushMatrix();
+    	glTranslatef(0.0f, 0.0f, 0.0f); //Сдвиг
+    	glRotatef(spin, 0.0f, 1.0f, 0.0f); //Вращение Солнца
+    	glBindTexture(GL_TEXTURE_2D, texture[1]); //Текстура Солнца
+    	DrawSphere(13920.0f, 40, 40); //Радиус, широта, долгота
+
+		//-------------------Меркурий------------------------------------------------------------------------------
+		glPushMatrix();
+    		glTranslatef(57900.0f, 0.0f, 0.0f); //Сдвиг (расстояние центра Меркурия от центра Солнца)
+    		glRotatef(spin, 0.0f, 1.0f, 0.0f); //Вращение Меркурия
+    		glBindTexture(GL_TEXTURE_2D, texture[3]); //Текстура Меркурия
+    		DrawSphere(2000.4397f, 40, 40); //Радиус, широта, долгота
+		glPopMatrix();
+		//--------------------------------------------------------------------------------------------------------------------------------
+
+	glPopMatrix();
+	spin += 0.2f;
+	//--------------------------------------------------------------------------------------------------------------------------------
 }
 
 
@@ -126,31 +132,26 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					}
 					if(!keys['F']) fp = false;
 
-					float yawRad   = camYaw * 3.14159265f / 180.0f;
-					float forwardX =  sinf(yawRad);
-					float forwardZ =  cosf(yawRad);
-					float rightX   = -cosf(yawRad);
-					float rightZ   =  sinf(yawRad);
+					float yawRad   = camYaw   * 3.14159265f / 180.0f;
+					float pitchRad = camPitch * 3.14159265f / 180.0f;
 
-					if(keys['W']) {
-						camX -= forwardX * 0.1f;
-						camZ -= forwardZ * 0.1f;
-					}
+					float cosPitch = cosf(pitchRad);
+					float sinPitch = sinf(pitchRad);
 
-					if(keys['S']) {
-						camX += forwardX * 0.1f;
-						camZ += forwardZ * 0.1f;
-					}
+					// «Вперёд» по взгляду (3D)
+					float forwardX = -sinf(yawRad) * cosPitch;
+					float forwardY =  sinPitch;
+					float forwardZ = -cosf(yawRad) * cosPitch;
 
-					if(keys['A']) {
-						camX += rightX   * 0.1f;
-						camZ += rightZ   * 0.1f;
-					}
+					// «Вправо» — всегда горизонтально, pitch не влияет
+					float rightX =  cosf(yawRad);
+					float rightZ = -sinf(yawRad);
 
-					if(keys['D']) {
-						camX -= rightX   * 0.1f;
-						camZ -= rightZ   * 0.1f;
-					}
+					// Движение
+					if(keys['W']) { camX += forwardX * 100.0f; camY += forwardY * 100.0f; camZ += forwardZ * 100.0f; }
+					if(keys['S']) { camX -= forwardX * 100.0f; camY -= forwardY * 100.0f; camZ -= forwardZ * 100.0f; }
+					if(keys['A']) { camX -= rightX   * 100.0f; camZ -= rightZ   * 100.0f; }
+					if(keys['D']) { camX += rightX   * 100.0f; camZ += rightZ   * 100.0f; }
 
 					if(keys[VK_UP])    camPitch += 1.0f;
 					if(keys[VK_DOWN])  camPitch -= 1.0f;
